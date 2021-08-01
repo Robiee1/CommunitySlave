@@ -21,6 +21,9 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
 });
+client.on('raw', async (reaction, user) => {
+    client.services.get('reactionListener').execute(reaction, user, client, channelId);
+});
 
 client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -31,35 +34,5 @@ client.on('message', message => {
     }
 });
 
-client.on('messageReactionAdd', async (reaction, user) => {
-    const monkaRole = reaction.message.guild.roles.cache.find(role => role.name === "MONKA");
-    if (reaction.message.partial) await reaction.message.fetch();
-    if (reaction.partial) await reaction.message.fetch();
-    if (user.bot) return;
-    if (!reaction.message.guild) return;
-
-    if (reaction.message.channel.id == channelId) {
-        if (reaction.emoji.name === 'YEP') {
-            await reaction.message.guild.members.cache.get(user.id).roles.add(monkaRole);
-        }
-    } else {
-        return;
-    }
-});
-client.on('messageReactionRemove', async (reaction, user) => {
-    const monkaRole = reaction.message.guild.roles.cache.find(role => role.name === "MONKA");
-    if (reaction.message.partial) await reaction.message.fetch();
-    if (reaction.partial) await reaction.message.fetch();
-    if (user.bot) return;
-    if (!reaction.message.guild) return;
-
-    if (reaction.message.channel.id == channelId){
-        if(reaction.emoji.name === 'YEP'){
-            await reaction.message.guild.members.cache.get(user.id).roles.remove(monkaRole);
-        }
-    } else {
-        return;
-    }
-});
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
